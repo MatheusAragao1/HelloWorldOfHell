@@ -1,6 +1,7 @@
 from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
+from gameplay import *
 
 janela = Window(1351, 901)
 mouse1 = Window.get_mouse()
@@ -39,16 +40,19 @@ botaoRankingHover.y = botaoNewGameHover.y + 150
 botaoConfHover.y = botaoRankingHover.y + 150
 botaoSairHover.y = botaoConfHover.y + 150
 
+#configuracaoJogo
 
-while(True):                                  
+dificuldade = 1
 
 
+while(True):                               
 
-
- background.draw() 
+ background.draw()
 
  if mouse1.is_over_area((botaoNewGame.x, botaoNewGame.y), (botaoNewGame.x + 450, botaoNewGame.y + 100)):
     botaoNewGameHover.draw()
+    if mouse1.is_button_pressed(1):
+        iniciarNovoJogo(dificuldade,janela);
  else:
     botaoNewGame.draw()
 
