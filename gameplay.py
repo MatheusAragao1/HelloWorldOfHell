@@ -14,14 +14,28 @@ def desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado):
 
 def iniciarNovoJogo(dificuldade,janela):
 
+    vidas = 3
     tempoPulo = 0
     ultimaDirecao = 'right'
 
     teclado = Window.get_keyboard()
 
     background1 = GameImage ("images/mapa_1/mapa_1_pt1.png")
+
+    vida1 = Sprite ("images/personagem/vida.png")
+    vida2 = Sprite ("images/personagem/vida.png")
+    vida3 = Sprite ("images/personagem/vida.png")
+
     personagem = Sprite ("images/personagem/personagem_parado.png")
     personagemParadoEsquerda = Sprite ("images/personagem/personagem_parado_esquerda.png")
+
+    #configurarVidas
+    vida1.x = 30
+    vida1.y = 30
+    vida2.x = 60
+    vida2.y = 30
+    vida3.x = 90
+    vida3.y = 30
 
     #gameObjects mapa_1_pt1
     plataforma1 = GameObject ()
@@ -49,11 +63,15 @@ def iniciarNovoJogo(dificuldade,janela):
     while(True):        
         teveColisao = False
 
+        if(vidas == 0):
+            return
+
         if(tempoPulo > 0):
             personagem.y -= 20
 
         if(personagem.y > janela.height):
             personagem.y = 0
+            vidas -= 1
 
         if(personagem.collided(plataforma1)):
             teveColisao = True            
@@ -79,5 +97,12 @@ def iniciarNovoJogo(dificuldade,janela):
         tempoPulo -= 1;
         background1.draw()
         desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado)
+        if vidas >= 1:
+          vida1.draw()
+        if vidas >= 2:
+          vida2.draw()
+        if vidas == 3:
+          vida3.draw()
+        janela.draw_text("Vidas", 35,5, 30, (126,25,27), "Calibri", True)
         janela.update()
     return
