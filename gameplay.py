@@ -3,8 +3,9 @@ from PPlay.sprite import *
 from PPlay.gameobject import *
 from PPlay.window import *
 
-def desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado):
-    if(ultimaDirecao == 'left'):
+
+def desenhar(personagem, personagemParadoEsquerda, ultimaDirecao, teclado):
+    if (ultimaDirecao == 'left'):
         personagemParadoEsquerda.x = personagem.x
         personagemParadoEsquerda.y = personagem.y
         personagemParadoEsquerda.draw()
@@ -12,24 +13,30 @@ def desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado):
         personagem.draw()
     return
 
-def iniciarNovoJogo(dificuldade,janela):
 
+# ficaria melhor teveColisão como uma função?
+def teveColisao(personagem, plataforma1, plataforma2, plataforma3):
+    return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3))
+
+
+def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
     tempoPulo = 0
     ultimaDirecao = 'right'
 
     teclado = Window.get_keyboard()
 
-    background1 = GameImage ("images/mapa_1/mapa_1_pt1.png")
+    # Imagens e Sprites
+    background1 = GameImage("images/mapa_1/mapa_1_pt1.png")
 
-    vida1 = Sprite ("images/personagem/vida.png")
-    vida2 = Sprite ("images/personagem/vida.png")
-    vida3 = Sprite ("images/personagem/vida.png")
+    vida1 = Sprite("images/personagem/vida.png")
+    vida2 = Sprite("images/personagem/vida.png")
+    vida3 = Sprite("images/personagem/vida.png")
 
-    personagem = Sprite ("images/personagem/personagem_parado.png")
-    personagemParadoEsquerda = Sprite ("images/personagem/personagem_parado_esquerda.png")
+    personagem = Sprite("images/personagem/personagem_parado.png")
+    personagemParadoEsquerda = Sprite("images/personagem/personagem_parado_esquerda.png")
 
-    #configurarVidas
+    # configurarVidas
     vida1.x = 30
     vida1.y = 30
     vida2.x = 60
@@ -37,72 +44,66 @@ def iniciarNovoJogo(dificuldade,janela):
     vida3.x = 90
     vida3.y = 30
 
-    #gameObjects mapa_1_pt1
-    plataforma1 = GameObject ()
+    lista_vidas = [vida1, vida2, vida3]
+
+    # gameObjects mapa_1_pt1
+    plataforma1 = GameObject()
     plataforma1.x = 215
     plataforma1.y = 310
     plataforma1.width = 200
     plataforma1.height = 1
 
-    plataforma2 = GameObject ()
+    plataforma2 = GameObject()
     plataforma2.x = 480
     plataforma2.y = 600
     plataforma2.width = 60
     plataforma2.height = 1
 
-    plataforma3 = GameObject ()
+    plataforma3 = GameObject()
     plataforma3.x = 665
     plataforma3.y = 462
     plataforma3.width = 800
     plataforma3.height = 1
 
-   #posicaoInicial
+    # posicaoInicial
     personagem.move_x(200)
     personagem.move_y(220)
 
-    while(True):        
-        teveColisao = False
+    while (True):
 
-        if(vidas == 0):
+        if (vidas == 0):
             return
 
-        if(tempoPulo > 0):
+        if (tempoPulo > 0):
             personagem.y -= 20
 
-        if(personagem.y > janela.height):
+        if (personagem.y > janela.height):
             personagem.y = 0
             vidas -= 1
 
-        if(personagem.collided(plataforma1)):
-            teveColisao = True            
-
-        if(personagem.collided(plataforma2)):
-            teveColisao = True    
-         
-        if(personagem.collided(plataforma3)):
-            teveColisao = True
-
-        if(teclado.key_pressed("right")):
+        if (teclado.key_pressed("right")):
             personagem.x += 5
             ultimaDirecao = 'right'
-        if(teclado.key_pressed("left")):
+
+        if (teclado.key_pressed("left")):
             personagem.x -= 5
             ultimaDirecao = 'left'
-        if(teclado.key_pressed("up") and teveColisao == True):
+
+        if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
             tempoPulo = 20
 
-        if(teveColisao == False):
-           personagem.y += 10
-        
-        tempoPulo -= 1;
+        if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
+            personagem.y += 10
+
+        tempoPulo -= 1
         background1.draw()
-        desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado)
-        if vidas >= 1:
-          vida1.draw()
-        if vidas >= 2:
-          vida2.draw()
-        if vidas == 3:
-          vida3.draw()
-        janela.draw_text("Vidas", 35,5, 30, (126,25,27), "Calibri", True)
+        desenhar(personagem, personagemParadoEsquerda, ultimaDirecao, teclado)
+
+        #nao sei se um loop seria mais eficiente do que os ifs mas achei interessante como alternativa
+        for x in range(vidas):
+            lista_vidas[x].draw()
+
+        janela.draw_text("Vidas", 35, 5, 30, (126, 25, 27), "Calibri", True)
         janela.update()
-    return
+
+
