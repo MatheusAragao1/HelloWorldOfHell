@@ -17,6 +17,8 @@ def iniciarNovoJogo(dificuldade,janela):
     vidas = 3
     tempoPulo = 0
     ultimaDirecao = 'right'
+    tiros = []
+    cronometro = 0
 
     teclado = Window.get_keyboard()
 
@@ -69,6 +71,28 @@ def iniciarNovoJogo(dificuldade,janela):
         if(tempoPulo > 0):
             personagem.y -= 20
 
+        if(teclado.key_pressed("z") and cronometro > 40):
+            bullet = Sprite ("images/personagem/bullet.png")
+            bullet.y = personagem.y + personagem.height/2
+            if(ultimaDirecao == 'right'):
+                bullet.direction = 'right'
+                bullet.x = personagem.x + personagem.width
+            else:
+                bullet.direction = 'left'
+                bullet.x = personagem.x
+            tiros.append(bullet)
+            cronometro = 0
+
+        for tiro in tiros:
+            if(tiro.direction == 'right'):
+                tiro.x += 10
+            else:
+                tiro.x -= 10
+            if(tiro.x > janela.width):
+                tiros.remove(tiro)
+            elif(tiro.x < 0):
+                tiros.remove(tiro)
+
         if(personagem.y > janela.height):
             personagem.y = 0
             vidas -= 1
@@ -94,7 +118,9 @@ def iniciarNovoJogo(dificuldade,janela):
         if(teveColisao == False):
            personagem.y += 10
         
-        tempoPulo -= 1;
+        cronometro += 1
+        tempoPulo -= 1
+
         background1.draw()
         desenhar(personagem,personagemParadoEsquerda,ultimaDirecao,teclado)
         if vidas >= 1:
@@ -103,6 +129,8 @@ def iniciarNovoJogo(dificuldade,janela):
           vida2.draw()
         if vidas == 3:
           vida3.draw()
+        for tiro in tiros:
+            tiro.draw()
         janela.draw_text("Vidas", 35,5, 30, (126,25,27), "Calibri", True)
         janela.update()
     return
