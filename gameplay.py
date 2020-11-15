@@ -7,6 +7,25 @@ from PPlay.window import *
 def teveColisao(personagem, plataforma1, plataforma2, plataforma3):
     return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3))
 
+def desenharTutorial(estagio,janela,teclado):
+    if estagio == 4:
+        janela.draw_text("Aperte a seta para direita para se movimentar", 200, 50, 50, (126, 25, 27), "Calibri", True)
+        if teclado.key_pressed("right"):
+            return estagio - 1
+    elif estagio == 3:
+        janela.draw_text("Aperte a seta para esquerda para se movimentar", 200, 50, 50, (126, 25, 27), "Calibri", True)
+        if teclado.key_pressed("left"):
+            return estagio - 1
+    elif estagio == 2:
+        janela.draw_text("Aperte a seta para cima para pular", 200, 50, 50, (126, 25, 27), "Calibri", True)
+        if teclado.key_pressed("up"):
+            return estagio - 1
+    elif estagio == 1:
+        janela.draw_text("Aperte a tecla z para atirar", 200, 50, 50, (126, 25, 27), "Calibri", True)
+        if teclado.key_pressed("z"):
+            return estagio - 1
+    return estagio
+
 
 def pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3):
     if (tempoPulo > 0):
@@ -143,6 +162,10 @@ def desenharTiros(tiros, janela):
 
 
 def iniciarNovoJogo(dificuldade, janela):
+
+    #ensina o jogador os primeiros comandos do jogo
+    estagioTutorial = 4
+
     vidas = 3
 
     #Movimentos do personagem e pulo
@@ -214,6 +237,8 @@ def iniciarNovoJogo(dificuldade, janela):
             listaVidas[x].draw()
 
         janela.draw_text("Vidas", 35, 5, 30, (126, 25, 27), "Calibri", True)
+
+        estagioTutorial = desenharTutorial(estagioTutorial,janela,teclado) if estagioTutorial > 0 else 0
 
         janela.update()
 
