@@ -27,8 +27,8 @@ def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIn
     #dicionário com os sprites do personagem correndo
     correndo = {'right': [correndoDireita1,correndoDireita2,correndoDireita3,correndoDireita4,correndoDireita5,correndoDireita6],'left': [correndoEsquerda1,correndoEsquerda2,correndoEsquerda3,correndoEsquerda4,correndoEsquerda5,correndoEsquerda6]}
 
-    #muda o sprite de corrida a cada 4 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
-    if cronometroIndice == 4:
+    #muda o sprite de corrida a cada 5 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
+    if cronometroIndice == 5:
         ultimoIndiceCorrida += 1
         cronometroIndice = 0
 
@@ -38,14 +38,14 @@ def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIn
 
 
     if (teclado.key_pressed("left")):
-        personagem.x -= 4
+        personagem.x -= 6
         correndo['left'][ultimoIndiceCorrida].x = personagem.x
         correndo['left'][ultimoIndiceCorrida].y = personagem.y
         return [correndo['left'][ultimoIndiceCorrida].draw(),'left',ultimoIndiceCorrida,cronometroIndice]
 
 
     if (teclado.key_pressed("right")):
-        personagem.x += 4
+        personagem.x += 6
         correndo['right'][ultimoIndiceCorrida].x = personagem.x
         correndo['right'][ultimoIndiceCorrida].y = personagem.y
         return [correndo['right'][ultimoIndiceCorrida].draw(),'right',ultimoIndiceCorrida,cronometroIndice]
@@ -130,7 +130,7 @@ def iniciarNovoJogo(dificuldade,janela):
             return
 
         if(tempoPulo > 0):
-            personagem.y -= 30
+            personagem.y -= 25
 
         if(teclado.key_pressed("z") and cronometro > 30):
             bullet = Sprite ("images/personagem/bullet.png")
@@ -159,7 +159,7 @@ def iniciarNovoJogo(dificuldade,janela):
             vidas -= 1
 
         if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-            tempoPulo = 15
+            tempoPulo = 20
 
         if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
             personagem.y += 15
@@ -174,18 +174,11 @@ def iniciarNovoJogo(dificuldade,janela):
         background1.draw()
 
         #desenha o personagem
-        desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[0]
-
         #recebe a última direção do personagem desenhado
-        ultimaDirecao = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[1]
-
         #recebe o indice do último sprite de corrida desenhado
-        ultimoIndiceCorrida = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[2]
-
         #recebe o valor do cronometro 0 caso ele seja zerado pelo controlador de sprites
-        cronometroIndice = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[3]
+        desenho,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)
 
-        # nao sei se um loop seria mais eficiente do que os ifs mas achei interessante como alternativa
         for x in range(vidas):
             listaVidas[x].draw()
 
