@@ -3,34 +3,60 @@ from PPlay.sprite import *
 from PPlay.gameobject import *
 from PPlay.window import *
 
-def desenhar(personagem, teclado, ultimaDirecao):
+def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIndice):
 
+    contadorTempoPassos = 0
     personagemParadoEsquerda = Sprite("images/personagem/personagem_parado_esquerda.png")
 
-    direcoes = {'right': personagem, 'left': personagemParadoEsquerda}
+    correndoDireita1 = Sprite("images/personagem/correndo_direita_1.png")
+    correndoDireita2 = Sprite("images/personagem/correndo_direita_2.png")
+    correndoDireita3 = Sprite("images/personagem/correndo_direita_3.png")
+    correndoDireita4 = Sprite("images/personagem/correndo_direita_4.png")
+    correndoDireita5 = Sprite("images/personagem/correndo_direita_5.png")
+    correndoDireita6 = Sprite("images/personagem/correndo_direita_6.png")
+
+    correndoEsquerda1 = Sprite("images/personagem/correndo_esquerda_1.png")
+    correndoEsquerda2 = Sprite("images/personagem/correndo_esquerda_2.png")
+    correndoEsquerda3 = Sprite("images/personagem/correndo_esquerda_3.png")
+    correndoEsquerda4 = Sprite("images/personagem/correndo_esquerda_4.png")
+    correndoEsquerda5 = Sprite("images/personagem/correndo_esquerda_5.png")
+    correndoEsquerda6 = Sprite("images/personagem/correndo_esquerda_6.png")
+
+    parado = {'right': personagem, 'left': personagemParadoEsquerda}
+    correndo = {'right': [correndoDireita1,correndoDireita2,correndoDireita3,correndoDireita4,correndoDireita5,correndoDireita6],'left': [correndoEsquerda1,correndoEsquerda2,correndoEsquerda3,correndoEsquerda4,correndoEsquerda5,correndoEsquerda6]}
+
+    if cronometroIndice == 4:
+        ultimoIndiceCorrida += 1
+        cronometroIndice = 0
+
+    if ultimoIndiceCorrida == 6:
+        ultimoIndiceCorrida = 0
+
 
     if (teclado.key_pressed("left")):
         personagem.x -= 4
-        direcoes['left'].x = personagem.x
-        direcoes['left'].y = personagem.y
-        return [direcoes['left'].draw(),'left']
+        correndo['left'][ultimoIndiceCorrida].x = personagem.x
+        correndo['left'][ultimoIndiceCorrida].y = personagem.y
+        return [correndo['left'][ultimoIndiceCorrida].draw(),'left',ultimoIndiceCorrida,cronometroIndice]
 
 
     if (teclado.key_pressed("right")):
         personagem.x += 4
-        direcoes['right'].x = personagem.x
-        direcoes['right'].y = personagem.y
-        return [direcoes['right'].draw(),'right']
+        correndo['right'][ultimoIndiceCorrida].x = personagem.x
+        correndo['right'][ultimoIndiceCorrida].y = personagem.y
+        return [correndo['right'][ultimoIndiceCorrida].draw(),'right',ultimoIndiceCorrida,cronometroIndice]
 
 
-    if ultimaDirecao == 'right':    
-       direcoes['right'].x = personagem.x
-       direcoes['right'].y = personagem.y
-       return [direcoes['right'].draw(),'right']
+    if ultimaDirecao == 'right':
+       controlarPosicao = 0 
+       parado['right'].x = personagem.x
+       parado['right'].y = personagem.y
+       return [parado['right'].draw(),'right',ultimoIndiceCorrida,cronometroIndice]
     else:
-       direcoes['left'].x = personagem.x
-       direcoes['left'].y = personagem.y
-       return [direcoes['left'].draw(),'left']
+       controlarPosicao = 0
+       parado['left'].x = personagem.x
+       parado['left'].y = personagem.y
+       return [parado['left'].draw(),'left',ultimoIndiceCorrida,cronometroIndice]
 
 def configurar_vidas():
     vida1 = Sprite("images/personagem/vida.png")
@@ -57,6 +83,8 @@ def iniciarNovoJogo(dificuldade,janela):
     ultimaDirecao = 'right'
     tiros = []
     cronometro = 0
+    cronometroIndice = 0
+    ultimoIndiceCorrida = 0
 
     teclado = Window.get_keyboard()
 
@@ -97,9 +125,9 @@ def iniciarNovoJogo(dificuldade,janela):
             return
 
         if(tempoPulo > 0):
-            personagem.y -= 20
+            personagem.y -= 30
 
-        if(teclado.key_pressed("z") and cronometro > 40):
+        if(teclado.key_pressed("z") and cronometro > 30):
             bullet = Sprite ("images/personagem/bullet.png")
             bullet.y = personagem.y + personagem.height/2
             if(ultimaDirecao == 'right'):
@@ -113,9 +141,9 @@ def iniciarNovoJogo(dificuldade,janela):
 
         for tiro in tiros:
             if(tiro.direction == 'right'):
-                tiro.x += 15
+                tiro.x += 25
             else:
-                tiro.x -= 15
+                tiro.x -= 25
             if(tiro.x > janela.width):
                 tiros.remove(tiro)
             elif(tiro.x < 0):
@@ -126,18 +154,21 @@ def iniciarNovoJogo(dificuldade,janela):
             vidas -= 1
 
         if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-            tempoPulo = 20
+            tempoPulo = 15
 
         if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-            personagem.y += 10
+            personagem.y += 15
         
         cronometro += 1
+        cronometroIndice += 1
         tempoPulo -= 1
 
         background1.draw()
 
-        desenhar(personagem,teclado,ultimaDirecao)[0]
-        ultimaDirecao = desenhar(personagem,teclado,ultimaDirecao)[1]
+        desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[0]
+        ultimaDirecao = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[1]
+        ultimoIndiceCorrida = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[2]
+        cronometroIndice = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[3]
 
         # nao sei se um loop seria mais eficiente do que os ifs mas achei interessante como alternativa
         for x in range(vidas):
