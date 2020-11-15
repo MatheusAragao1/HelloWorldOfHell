@@ -5,7 +5,6 @@ from PPlay.window import *
 
 def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIndice):
 
-    contadorTempoPassos = 0
     personagemParadoEsquerda = Sprite("images/personagem/personagem_parado_esquerda.png")
 
     correndoDireita1 = Sprite("images/personagem/correndo_direita_1.png")
@@ -22,13 +21,18 @@ def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIn
     correndoEsquerda5 = Sprite("images/personagem/correndo_esquerda_5.png")
     correndoEsquerda6 = Sprite("images/personagem/correndo_esquerda_6.png")
 
+    #dicionário com os sprites do personagem parado
     parado = {'right': personagem, 'left': personagemParadoEsquerda}
+
+    #dicionário com os sprites do personagem correndo
     correndo = {'right': [correndoDireita1,correndoDireita2,correndoDireita3,correndoDireita4,correndoDireita5,correndoDireita6],'left': [correndoEsquerda1,correndoEsquerda2,correndoEsquerda3,correndoEsquerda4,correndoEsquerda5,correndoEsquerda6]}
 
+    #muda o sprite de corrida a cada 4 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
     if cronometroIndice == 4:
         ultimoIndiceCorrida += 1
         cronometroIndice = 0
 
+    #ao chegar no último sprite de corrida retorna ao primeiro sprite de corrida da lista
     if ultimoIndiceCorrida == 6:
         ultimoIndiceCorrida = 0
 
@@ -47,6 +51,7 @@ def desenhar(personagem, teclado, ultimaDirecao,ultimoIndiceCorrida,cronometroIn
         return [correndo['right'][ultimoIndiceCorrida].draw(),'right',ultimoIndiceCorrida,cronometroIndice]
 
 
+    #reseta o desenho caso o personagem esteja parado
     if ultimaDirecao == 'right':
        controlarPosicao = 0 
        parado['right'].x = personagem.x
@@ -159,15 +164,25 @@ def iniciarNovoJogo(dificuldade,janela):
         if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
             personagem.y += 15
         
+        #cronometro para contar a frequencia possível de tiro
         cronometro += 1
+        #cronometro para contar a frequencia possível de mudança de sprite de corrida
         cronometroIndice += 1
+
         tempoPulo -= 1
 
         background1.draw()
 
+        #desenha o personagem
         desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[0]
+
+        #recebe a última direção do personagem desenhado
         ultimaDirecao = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[1]
+
+        #recebe o indice do último sprite de corrida desenhado
         ultimoIndiceCorrida = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[2]
+
+        #recebe o valor do cronometro 0 caso ele seja zerado pelo controlador de sprites
         cronometroIndice = desenhar(personagem,teclado,ultimaDirecao,ultimoIndiceCorrida,cronometroIndice)[3]
 
         # nao sei se um loop seria mais eficiente do que os ifs mas achei interessante como alternativa
