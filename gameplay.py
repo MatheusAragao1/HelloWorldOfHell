@@ -50,6 +50,7 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
                 'left': [correndoEsquerda1, correndoEsquerda2, correndoEsquerda3, correndoEsquerda4, correndoEsquerda5,
                          correndoEsquerda6]}
 
+    cronometroIndice += 1
 
     # muda o sprite de corrida a cada 4 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
     if cronometroIndice == 4:
@@ -63,14 +64,25 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
     if (teclado.key_pressed("left")):
         ultimaDirecao = 'left'
         personagem.x -= 4
+        move = 1
 
-    if (teclado.key_pressed("right")):
+    elif (teclado.key_pressed("right")):
         ultimaDirecao = 'right'
         personagem.x += 4
+        move = 1
 
-    parado[ultimaDirecao][ultimoIndiceCorrida].x = personagem.x
-    parado[ultimaDirecao][ultimoIndiceCorrida].y = personagem.y
-    parado[ultimaDirecao][ultimoIndiceCorrida].draw()
+    else:
+        move = 0
+
+    if move: #checa se alguma das teclas de movimento foram usadas
+        correndo[ultimaDirecao][ultimoIndiceCorrida].x = personagem.x
+        correndo[ultimaDirecao][ultimoIndiceCorrida].y = personagem.y
+        correndo[ultimaDirecao][ultimoIndiceCorrida].draw()
+
+    else:
+        parado[ultimaDirecao].x = personagem.x
+        parado[ultimaDirecao].y = personagem.y
+        parado[ultimaDirecao].draw()
 
     return ultimaDirecao, cronometroIndice, ultimoIndiceCorrida
 
@@ -193,6 +205,7 @@ def iniciarNovoJogo(dificuldade, janela):
 
         background1.draw()
 
+        #desenha a movimentacao do personagem
         ultimaDirecao, cronometroIndice, ultimoIndiceCorrida = desenharMovimentos(personagem, teclado, ultimaDirecao,cronometroIndice,ultimoIndiceCorrida)
 
         desenharTiros(tiros, janela)
