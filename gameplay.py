@@ -4,32 +4,46 @@ from PPlay.gameobject import *
 from PPlay.window import *
 
 
-def desenhar(personagem, teclado):
+def teveColisao(personagem, plataforma1, plataforma2, plataforma3):
+    return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3))
 
+
+def pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3):
+    if (tempoPulo > 0):
+        personagem.y -= 20
+
+    if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
+        tempoPulo = 20
+
+    if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
+        personagem.y += 10
+
+    tempoPulo -= 1
+
+    return tempoPulo
+
+
+def desenharMovimentos(personagem, teclado, ultimaDirecao):
     personagemParadoEsquerda = Sprite("images/personagem/personagem_parado_esquerda.png")
 
     direcoes = {'right': personagem, 'left': personagemParadoEsquerda}
 
     if (teclado.key_pressed("left")):
-        personagem.x -= 5
-        direcoes['left'].x = personagem.x
-        direcoes['left'].y = personagem.y
-        return direcoes['left'].draw()
-
+        ultimaDirecao = 'left'
+        personagem.x -= 4
 
     if (teclado.key_pressed("right")):
-        personagem.x += 5
-        direcoes['right'].x = personagem.x
-        direcoes['right'].y = personagem.y
-        return direcoes['right'].draw()
+        ultimaDirecao = 'right'
+        personagem.x += 4
+
+    direcoes[ultimaDirecao].x = personagem.x
+    direcoes[ultimaDirecao].y = personagem.y
+    direcoes[ultimaDirecao].draw()
+
+    return ultimaDirecao
 
 
-    return personagem.draw()
-
-
-
-
-def configurar_vidas():
+def configurarVidas(dificuldade):
     vida1 = Sprite("images/personagem/vida.png")
     vida2 = Sprite("images/personagem/vida.png")
     vida3 = Sprite("images/personagem/vida.png")
@@ -45,16 +59,57 @@ def configurar_vidas():
     return [vida1, vida2, vida3]
 
 
-# ficaria melhor teveColisão como uma função?
-def teveColisao(personagem, plataforma1, plataforma2, plataforma3):
-    return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3))
+def cronometroECriacaoTiros(cronometro, tiros, personagem, teclado, ultimaDirecao):
+
+    if (teclado.key_pressed("z") and cronometro > 40):
+
+        bullet = Sprite("images/personagem/bullet.png")
+        bullet.y = personagem.y + personagem.height / 2
+
+        if (ultimaDirecao == 'right'):
+            bullet.direction = 'right'
+            bullet.x = personagem.x + personagem.width
+        else:
+            bullet.direction = 'left'
+            bullet.x = personagem.x
+
+        tiros.append(bullet)
+        cronometro = 0
+
+    cronometro += 1
+
+    return cronometro
+
+
+def desenharTiros(tiros, janela):
+    for tiro in tiros:
+
+        if (tiro.direction == 'right'):
+            tiro.x += 15
+        else:
+            tiro.x -= 15
+
+        if (tiro.x > janela.width):
+            tiros.remove(tiro)
+        elif (tiro.x < 0):
+            tiros.remove(tiro)
+
+    for tiro in tiros:
+        tiro.draw()
 
 
 def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
+
     tempoPulo = 0
+
     ultimaDirecao = 'right'
 
+    tiros = []
+
+    cronometro = 0
+
+    # Controles
     teclado = Window.get_keyboard()
 
     # Imagens e Sprites
@@ -62,10 +117,8 @@ def iniciarNovoJogo(dificuldade, janela):
 
     personagem = Sprite("images/personagem/personagem_parado.png")
 
-    # Uma coisa que pensei usando uma funcao foi poder ajustar a quantidade de vidas com a dificuldade
-    listaVidas = configurar_vidas()
+    listaVidas = configurarVidas(dificuldade)
 
-    # gameObjects mapa_1_pt1
     plataforma1 = GameObject()
     plataforma1.x = 215
     plataforma1.y = 310
@@ -85,36 +138,33 @@ def iniciarNovoJogo(dificuldade, janela):
     plataforma3.height = 1
 
     # posicaoInicial
-    personagem.x = 200
-    personagem.y = 220
+    personagem.move_x(200)
+    personagem.move_y(220)
 
     while (True):
 
         if (vidas == 0):
             return
 
-        if (tempoPulo > 0):
-            personagem.y -= 20
-
         if (personagem.y > janela.height):
             personagem.y = 0
             vidas -= 1
 
-        if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-            tempoPulo = 20
+        cronometro = cronometroECriacaoTiros(cronometro, tiros, personagem, teclado, ultimaDirecao)
 
-        if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-            personagem.y += 10
-
-        tempoPulo -= 1
+        tempoPulo = pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3)
 
         background1.draw()
 
-        desenhar(personagem, teclado)
+        ultimaDirecao = desenharMovimentos(personagem, teclado, ultimaDirecao)
 
-        # nao sei se um loop seria mais eficiente do que os ifs mas achei interessante como alternativa
+        desenharTiros(tiros, janela)
+
         for x in range(vidas):
             listaVidas[x].draw()
 
         janela.draw_text("Vidas", 35, 5, 30, (126, 25, 27), "Calibri", True)
+
         janela.update()
+
+    Return
