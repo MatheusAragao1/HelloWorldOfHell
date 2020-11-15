@@ -23,10 +23,42 @@ def pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3)
     return tempoPulo
 
 
-def desenharMovimentos(personagem, teclado, ultimaDirecao):
+def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ultimoIndiceCorrida):
     personagemParadoEsquerda = Sprite("images/personagem/personagem_parado_esquerda.png")
 
-    direcoes = {'right': personagem, 'left': personagemParadoEsquerda}
+    correndoDireita1 = Sprite("images/personagem/correndo_direita_1.png")
+    correndoDireita2 = Sprite("images/personagem/correndo_direita_2.png")
+    correndoDireita3 = Sprite("images/personagem/correndo_direita_3.png")
+    correndoDireita4 = Sprite("images/personagem/correndo_direita_4.png")
+    correndoDireita5 = Sprite("images/personagem/correndo_direita_5.png")
+    correndoDireita6 = Sprite("images/personagem/correndo_direita_6.png")
+
+    correndoEsquerda1 = Sprite("images/personagem/correndo_esquerda_1.png")
+    correndoEsquerda2 = Sprite("images/personagem/correndo_esquerda_2.png")
+    correndoEsquerda3 = Sprite("images/personagem/correndo_esquerda_3.png")
+    correndoEsquerda4 = Sprite("images/personagem/correndo_esquerda_4.png")
+    correndoEsquerda5 = Sprite("images/personagem/correndo_esquerda_5.png")
+    correndoEsquerda6 = Sprite("images/personagem/correndo_esquerda_6.png")
+
+
+    # dicionário com os sprites do personagem parado
+    parado = {'right': personagem, 'left': personagemParadoEsquerda}
+
+    # dicionário com os sprites do personagem correndo
+    correndo = {'right': [correndoDireita1, correndoDireita2, correndoDireita3, correndoDireita4, correndoDireita5,
+                          correndoDireita6],
+                'left': [correndoEsquerda1, correndoEsquerda2, correndoEsquerda3, correndoEsquerda4, correndoEsquerda5,
+                         correndoEsquerda6]}
+
+
+    # muda o sprite de corrida a cada 4 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
+    if cronometroIndice == 4:
+        ultimoIndiceCorrida += 1
+        cronometroIndice = 0
+
+    # ao chegar no último sprite de corrida retorna ao primeiro sprite de corrida da lista
+    if ultimoIndiceCorrida == 6:
+        ultimoIndiceCorrida = 0
 
     if (teclado.key_pressed("left")):
         ultimaDirecao = 'left'
@@ -36,11 +68,11 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao):
         ultimaDirecao = 'right'
         personagem.x += 4
 
-    direcoes[ultimaDirecao].x = personagem.x
-    direcoes[ultimaDirecao].y = personagem.y
-    direcoes[ultimaDirecao].draw()
+    parado[ultimaDirecao][ultimoIndiceCorrida].x = personagem.x
+    parado[ultimaDirecao][ultimoIndiceCorrida].y = personagem.y
+    parado[ultimaDirecao][ultimoIndiceCorrida].draw()
 
-    return ultimaDirecao
+    return ultimaDirecao, cronometroIndice, ultimoIndiceCorrida
 
 
 def configurarVidas(dificuldade):
@@ -59,9 +91,9 @@ def configurarVidas(dificuldade):
     return [vida1, vida2, vida3]
 
 
-def cronometroECriacaoTiros(cronometro, tiros, personagem, teclado, ultimaDirecao):
+def cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao):
 
-    if (teclado.key_pressed("z") and cronometro > 40):
+    if (teclado.key_pressed("z") and cronometroTiro > 40):
 
         bullet = Sprite("images/personagem/bullet.png")
         bullet.y = personagem.y + personagem.height / 2
@@ -74,11 +106,11 @@ def cronometroECriacaoTiros(cronometro, tiros, personagem, teclado, ultimaDireca
             bullet.x = personagem.x
 
         tiros.append(bullet)
-        cronometro = 0
+        cronometroTiro = 0
 
-    cronometro += 1
+    cronometroTiro += 1
 
-    return cronometro
+    return cronometroTiro
 
 
 def desenharTiros(tiros, janela):
@@ -101,13 +133,18 @@ def desenharTiros(tiros, janela):
 def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
 
+    #Movimentos do personagem e pulo
     tempoPulo = 0
 
     ultimaDirecao = 'right'
 
-    tiros = []
+    cronometroIndice = 0
 
-    cronometro = 0
+    ultimoIndiceCorrida = 0
+
+    #tiros
+    tiros = []
+    cronometroTiro = 0
 
     # Controles
     teclado = Window.get_keyboard()
@@ -150,13 +187,13 @@ def iniciarNovoJogo(dificuldade, janela):
             personagem.y = 0
             vidas -= 1
 
-        cronometro = cronometroECriacaoTiros(cronometro, tiros, personagem, teclado, ultimaDirecao)
+        cronometroTiro = cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao)
 
         tempoPulo = pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3)
 
         background1.draw()
 
-        ultimaDirecao = desenharMovimentos(personagem, teclado, ultimaDirecao)
+        ultimaDirecao, cronometroIndice, ultimoIndiceCorrida = desenharMovimentos(personagem, teclado, ultimaDirecao,cronometroIndice,ultimoIndiceCorrida)
 
         desenharTiros(tiros, janela)
 
