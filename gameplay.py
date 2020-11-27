@@ -4,10 +4,109 @@ from PPlay.gameobject import *
 from PPlay.window import *
 
 
-def teveColisao(personagem, plataforma1, plataforma2, plataforma3):
-    return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3))
+def teveColisao(personagem, plataforma1, plataforma2, plataforma3, plataforma4):
+    return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3) or personagem.collided(plataforma4))
 
-def desenharTutorial(estagio,janela,teclado):
+def desenharMapa(mapa,plataforma1,plataforma2,plataforma3,plataforma4):
+    if mapa == 1:
+        background = GameImage("images/mapa_1/mapa_1.png")
+
+    elif mapa == 2:
+        background = GameImage("images/mapa_1/mapa_2.png")
+
+        plataforma1.width = 1400
+        plataforma1.height = 1
+        plataforma1.x = 0
+        plataforma1.y = 630
+
+        plataforma2.width = 40
+        plataforma2.height = 1
+        plataforma2.x = 1000
+        plataforma2.y = 550
+
+        plataforma3.width = 40
+        plataforma3.height = 1
+        plataforma3.x = 1100
+        plataforma3.y = 470
+
+        plataforma4.width = 100
+        plataforma4.height = 1
+        plataforma4.x = 1200
+        plataforma4.y = 400
+
+    elif mapa == 3:
+        background = GameImage("images/mapa_1/mapa_3.png")
+
+        plataforma1.width = 1400
+        plataforma1.height = 1
+        plataforma1.x = 0
+        plataforma1.y = 560
+
+        plataforma2.width = 100
+        plataforma2.height = 1
+        plataforma2.x = 0
+        plataforma2.y = 200
+
+        plataforma3.width = 0
+        plataforma3.height = 0
+        plataforma3.x = 0
+        plataforma3.y = 0
+
+        plataforma4.width = 0
+        plataforma4.height = 0
+        plataforma4.x = 0
+        plataforma4.y = 0
+
+
+    elif mapa == 4:
+        background = GameImage("images/mapa_1/mapa_4.png")
+
+        plataforma1.width = 1400
+        plataforma1.height = 1
+        plataforma1.x = 0
+        plataforma1.y = 755
+
+        plataforma2.width = 100
+        plataforma2.height = 1
+        plataforma2.x = 0
+        plataforma2.y = 440
+
+        plataforma3.width = 0
+        plataforma3.height = 0
+        plataforma3.x = 0
+        plataforma3.y = 0
+
+        plataforma4.width = 0
+        plataforma4.height = 0
+        plataforma4.x = 0
+        plataforma4.y = 0
+
+    else:
+        background = GameImage("images/mapa_1/mapa_5.png")
+
+        plataforma1.width = 1400
+        plataforma1.height = 1
+        plataforma1.x = 0
+        plataforma1.y = 820
+
+        plataforma2.width = 40
+        plataforma2.height = 1
+        plataforma2.x = 400
+        plataforma2.y = 670
+
+        plataforma3.width = 100
+        plataforma3.height = 1
+        plataforma3.x = 550
+        plataforma3.y = 530
+
+        plataforma4.width = 40
+        plataforma4.height = 1
+        plataforma4.x = 800
+        plataforma4.y = 660
+
+    return background.draw()
+
+def desenharTutorial(estagio,janela,teclado,mapa):
     if estagio == 4:
         janela.draw_text("Aperte a seta para direita para se movimentar", 200, 50, 50, (126, 25, 27), "Calibri", True)
         if teclado.key_pressed("right"):
@@ -24,18 +123,21 @@ def desenharTutorial(estagio,janela,teclado):
         janela.draw_text("Aperte a tecla z para atirar", 200, 50, 50, (126, 25, 27), "Calibri", True)
         if teclado.key_pressed("z"):
             return estagio - 1
+    
+    if(mapa == 1):
+        janela.draw_text("Derrote todos os inimigos no mapa e avance para a direita ->", 200, 100, 30, (126, 25, 27), "Calibri", True)
     return estagio
 
 
-def pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3):
+def pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3, plataforma4):
     if (tempoPulo > 0):
-        personagem.y -= 20
+        personagem.y -= 26
 
-    if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
+    if (teclado.key_pressed("up") and teveColisao(personagem, plataforma1, plataforma2, plataforma3, plataforma4)):
         tempoPulo = 20
 
-    if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3)):
-        personagem.y += 10
+    if (not teveColisao(personagem, plataforma1, plataforma2, plataforma3, plataforma4)):
+        personagem.y += 15
 
     tempoPulo -= 1
 
@@ -82,12 +184,12 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
 
     if (teclado.key_pressed("left")):
         ultimaDirecao = 'left'
-        personagem.x -= 5
+        personagem.x -= 8
         move = 1
 
     elif (teclado.key_pressed("right")):
         ultimaDirecao = 'right'
-        personagem.x += 5
+        personagem.x += 8
         move = 1
 
     else:
@@ -168,6 +270,12 @@ def iniciarNovoJogo(dificuldade, janela):
 
     vidas = 3
 
+    #carrega o mapa inicial
+    mapa = 1
+
+    #inimigos no mapa
+    inimigosNoMapa = []
+
     #Movimentos do personagem e pulo
     tempoPulo = 0
 
@@ -185,7 +293,6 @@ def iniciarNovoJogo(dificuldade, janela):
     teclado = Window.get_keyboard()
 
     # Imagens e Sprites
-    background1 = GameImage("images/mapa_1/mapa_1_pt1.png")
 
     personagem = Sprite("images/personagem/personagem_parado.png")
 
@@ -209,6 +316,12 @@ def iniciarNovoJogo(dificuldade, janela):
     plataforma3.width = 800
     plataforma3.height = 1
 
+    plataforma4 = GameObject()
+    plataforma4.x = 0
+    plataforma4.y = 0
+    plataforma4.width = 0
+    plataforma4.height = 0
+
     # posicaoInicial
     personagem.move_x(200)
     personagem.move_y(220)
@@ -222,11 +335,26 @@ def iniciarNovoJogo(dificuldade, janela):
             personagem.y = 0
             vidas -= 1
 
+        if (personagem.x < 0):
+            personagem.x = 10
+        
+        # limita o personagem para nao voltar ao mapa anterior e controla a posicao inicial do personagem em cada mapa.
+        if personagem.x > janela.width:
+            if mapa < 5:
+                mapa += 1
+                personagem.x = 10
+            else:
+                personagem.x = janela.width - 100
+            if(mapa == 3):
+                personagem.y = 100
+            elif(mapa == 4):
+                personagem.y = 200
+
         cronometroTiro = cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao)
 
-        tempoPulo = pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3)
+        tempoPulo = pular(personagem, teclado, tempoPulo, plataforma1, plataforma2, plataforma3, plataforma4)
 
-        background1.draw()
+        desenharMapa(mapa,plataforma1,plataforma2,plataforma3,plataforma4)
 
         #desenha a movimentacao do personagem
         ultimaDirecao, cronometroIndice, ultimoIndiceCorrida = desenharMovimentos(personagem, teclado, ultimaDirecao,cronometroIndice,ultimoIndiceCorrida)
@@ -238,7 +366,7 @@ def iniciarNovoJogo(dificuldade, janela):
 
         janela.draw_text("Vidas", 35, 5, 30, (126, 25, 27), "Calibri", True)
 
-        estagioTutorial = desenharTutorial(estagioTutorial,janela,teclado) if estagioTutorial > 0 else 0
+        estagioTutorial = desenharTutorial(estagioTutorial,janela,teclado,mapa) if estagioTutorial > 0 else 0
 
         janela.update()
 
