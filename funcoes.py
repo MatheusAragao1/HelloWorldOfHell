@@ -127,11 +127,21 @@ def desenharTutorial(estagio,janela,teclado,mapa):
         janela.draw_text("Derrote todos os inimigos no mapa e avance para a direita ->", 200, 100, 30, (126, 25, 27), "Calibri", True)
     return estagio
 
-def voar(personagem, teclado, energia, plataforma1, plataforma2, plataforma3, plataforma4):
+def voar(personagem, teclado, energia,ultimaDirecao, plataforma1, plataforma2, plataforma3, plataforma4):
+
+    fogo_voar = {"esquerda": Sprite ("images/personagem/fogo_voar_esquerda.png") , "direita": Sprite ("images/personagem/fogo_voar_direita.png")}
 
     if (teclado.key_pressed("up") and energia >= 2):
             personagem.y -= 26
             energia -= 2
+            if(ultimaDirecao == 'right'):
+                fogo_voar['direita'].x = personagem.x + 6
+                fogo_voar['direita'].y = personagem.y + 88
+                fogo_voar['direita'].draw()
+            else:
+                fogo_voar['esquerda'].x = personagem.x + 70
+                fogo_voar['esquerda'].y = personagem.y + 88
+                fogo_voar['esquerda'].draw()
 
     elif(energia < 100):
         energia += 1
@@ -161,10 +171,10 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
     correndoEsquerda6 = Sprite("images/personagem/correndo_esquerda_6.png")
 
 
-    # dicionário com os sprites do personagem parado
+    # dicionï¿½rio com os sprites do personagem parado
     parado = {'right': personagem, 'left': personagemParadoEsquerda}
 
-    # dicionário com os sprites do personagem correndo
+    # dicionï¿½rio com os sprites do personagem correndo
     correndo = {'right': [correndoDireita1, correndoDireita2, correndoDireita3, correndoDireita4, correndoDireita5,
                           correndoDireita6],
                 'left': [correndoEsquerda1, correndoEsquerda2, correndoEsquerda3, correndoEsquerda4, correndoEsquerda5,
@@ -172,12 +182,12 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
 
     cronometroIndice += 1
 
-    # muda o sprite de corrida a cada 5 gameloops (1 gameloop só a mudança é mt rápida e quase imperceptivel)
+    # muda o sprite de corrida a cada 5 gameloops (1 gameloop sï¿½ a mudanï¿½a ï¿½ mt rï¿½pida e quase imperceptivel)
     if cronometroIndice == 5:
         ultimoIndiceCorrida += 1
         cronometroIndice = 0
 
-    # ao chegar no último sprite de corrida retorna ao primeiro sprite de corrida da lista
+    # ao chegar no ï¿½ltimo sprite de corrida retorna ao primeiro sprite de corrida da lista
     if ultimoIndiceCorrida == 6:
         ultimoIndiceCorrida = 0
 

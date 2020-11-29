@@ -94,13 +94,12 @@ def iniciarNovoJogo(dificuldade, janela):
 
         cronometroTiro = cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao)
 
-
-        desenharMapa(mapa,plataforma1,plataforma2,plataforma3,plataforma4)
-
-        energia = voar(personagem, teclado, energia, plataforma1, plataforma2, plataforma3, plataforma4)
+        desenharMapa(mapa,plataforma1,plataforma2,plataforma3,plataforma4)        
 
         #desenha a movimentacao do personagem
         ultimaDirecao, cronometroIndice, ultimoIndiceCorrida = desenharMovimentos(personagem, teclado, ultimaDirecao,cronometroIndice,ultimoIndiceCorrida)
+
+        energia = voar(personagem, teclado, energia, ultimaDirecao, plataforma1, plataforma2, plataforma3, plataforma4)
 
         desenharTiros(tiros, janela)
 
