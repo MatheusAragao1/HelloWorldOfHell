@@ -6,6 +6,45 @@ from PPlay.window import *
 def teveColisao(personagem, plataforma1, plataforma2, plataforma3, plataforma4):
     return (personagem.collided(plataforma1) or personagem.collided(plataforma2) or personagem.collided(plataforma3) or personagem.collided(plataforma4))
 
+def gerarInimigos(inimigosNoMapa,mapa):
+    totem = Sprite("images/inimigos/Totem.png")
+    esqueleto = Sprite("images/inimigos/esqueleto_direita.png")
+    esqueleto2 = Sprite("images/inimigos/esqueleto_esquerda.png")
+
+    if(mapa == 1):
+        return
+    elif(mapa == 2):
+        return
+    elif(mapa == 3):
+        esqueleto.x = 1000
+        esqueleto.y = 450
+        esqueleto.life = 3
+        esqueleto.tipo = 'esqueleto'
+        esqueleto.estado = 'normal'
+        esqueleto.direcao = 'right'
+        inimigosNoMapa.append(esqueleto)
+
+        esqueleto2.x = 800
+        esqueleto2.y = 450
+        esqueleto2.life = 3
+        esqueleto2.tipo = 'esqueleto'
+        esqueleto2.estado = 'normal'
+        esqueleto2.direcao = 'left'
+        inimigosNoMapa.append(esqueleto2)
+
+    elif(mapa == 4):
+        totem.x = 1150
+        totem.y = 10
+        totem.life = 4
+        totem.tipo = 'totem'
+        totem.estado = 'normal'
+        totem.direcao = 'right'
+        inimigosNoMapa.append(totem)
+    elif(mapa == 5):
+        return
+
+    return None
+
 def desenharMapa(mapa,plataforma1,plataforma2,plataforma3,plataforma4):
     if mapa == 1:
         background = GameImage("images/mapa_1/mapa_1.png")
@@ -182,12 +221,12 @@ def desenharMovimentos(personagem, teclado, ultimaDirecao, cronometroIndice, ult
 
     cronometroIndice += 1
 
-    # muda o sprite de corrida a cada 5 gameloops (1 gameloop s� a mudan�a � mt r�pida e quase imperceptivel)
+    # muda o sprite de corrida a cada 5 gameloops (1 gameloop so a mudanca e mt rapida e quase imperceptivel)
     if cronometroIndice == 5:
         ultimoIndiceCorrida += 1
         cronometroIndice = 0
 
-    # ao chegar no �ltimo sprite de corrida retorna ao primeiro sprite de corrida da lista
+    # ao chegar no ultimo sprite de corrida retorna ao primeiro sprite de corrida da lista
     if ultimoIndiceCorrida == 6:
         ultimoIndiceCorrida = 0
 
@@ -259,9 +298,9 @@ def desenharTiros(tiros, janela):
     for tiro in tiros:
 
         if (tiro.direction == 'right'):
-            tiro.x += 15
+            tiro.x += 15            
         else:
-            tiro.x -= 15
+            tiro.x -= 15            
 
         if (tiro.x > janela.width):
             tiros.remove(tiro)
@@ -270,3 +309,76 @@ def desenharTiros(tiros, janela):
 
     for tiro in tiros:
         tiro.draw()
+
+def desenharDanificado(inimigo):
+    totemDanificado = Sprite("images/inimigos/totem_dano.png")
+    esqueletoDanificado = Sprite("images/inimigos/esqueleto_dano.png")
+    if(inimigo.tipo == 'totem'):
+        totemDanificado.x = inimigo.x
+        totemDanificado.y = inimigo.y
+        totemDanificado.draw()
+    if(inimigo.tipo == 'esqueleto'):
+        esqueletoDanificado.x = inimigo.x
+        esqueletoDanificado.y = inimigo.y
+        esqueletoDanificado.draw()
+
+def desenharInimigos(inimigosNoMapa,tiros):
+    colidiu = False
+    for tiro in tiros:
+        for inimigo in inimigosNoMapa:
+            if tiro.collided(inimigo):
+                colidiu = True
+                inimigo.estado = 'danificado'
+                inimigo.life -= 1
+                desenharDanificado(inimigo)
+                if(inimigo.life == 0):
+                    inimigosNoMapa.remove(inimigo)
+        if colidiu == True:
+            tiros.remove(tiro)
+            colidiu = False
+    for inimigo in inimigosNoMapa:
+        if inimigo.estado != 'normal':
+            inimigo.estado = 'normal'
+        else:
+            if(inimigo.tipo == 'totem'):
+                inimigo.draw()
+            elif(inimigo.tipo == 'esqueleto'):
+                if inimigo.direcao == 'right':
+                    temp = Sprite("images/inimigos/esqueleto_direita.png")
+                    inimigo.x += 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+                elif inimigo.direcao == 'left':
+                    temp = Sprite("images/inimigos/esqueleto_esquerda.png")
+                    inimigo.x -= 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+
+                if inimigo.x > 1300:
+                    inimigo.direcao = 'left'
+                elif inimigo.x < 10:
+                    inimigo.direcao = 'right'
+
+
+def efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem):
+    meteoro = Sprite ("images/inimigos/pedra.png")
+    meteoro.x = personagem.x
+    meteoro.y = 0
+    for inimigo in inimigosNoMapa:
+        if inimigo.tipo == 'totem':
+            if ultimoMeteoro > 100:
+                listaMeteoros.append(meteoro)
+                return 0
+    return ultimoMeteoro + 1
+
+def desenharMeteoros(personagem,listaMeteoros,vidas):
+    for meteoro in listaMeteoros:
+        meteoro.y += 10
+        if(meteoro.collided(personagem)):
+           vidas -= 1
+           listaMeteoros.remove(meteoro)
+        else:
+            meteoro.draw()
+    return vidas

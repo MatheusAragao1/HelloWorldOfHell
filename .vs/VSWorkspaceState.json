@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\images\\mapa_1"
+    "\\images",
+    "\\images\\mapa_1",
+    "\\images\\personagem"
   ],
-  "SelectedNode": "\\gameplay.py",
   "PreviewInSolutionExplorer": false
 }

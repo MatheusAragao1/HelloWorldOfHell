@@ -13,10 +13,12 @@ def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
 
     #carrega o mapa inicial
-    mapa = 1
+    mapa = 2
 
     #inimigos no mapa
     inimigosNoMapa = []
+    ultimoMeteoro = 0
+    listaMeteoros = []
 
     #Movimentos do personagem e voar
     energia = 100
@@ -82,15 +84,16 @@ def iniciarNovoJogo(dificuldade, janela):
         
         # limita o personagem para nao voltar ao mapa anterior e controla a posicao inicial do personagem em cada mapa.
         if personagem.x > janela.width:
-            if mapa < 5:
+            if mapa < 5 and inimigosNoMapa == []:
                 mapa += 1
                 personagem.x = 10
+                gerarInimigos(inimigosNoMapa,mapa)
+                if(mapa == 3):
+                    personagem.y = 100
+                elif(mapa == 4):
+                    personagem.y = 200
             else:
                 personagem.x = janela.width - 100
-            if(mapa == 3):
-                personagem.y = 100
-            elif(mapa == 4):
-                personagem.y = 200
 
         cronometroTiro = cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao)
 
@@ -103,12 +106,18 @@ def iniciarNovoJogo(dificuldade, janela):
 
         desenharTiros(tiros, janela)
 
+        desenharInimigos(inimigosNoMapa,tiros)
+
+        ultimoMeteoro = efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem)
+
+        vidas = desenharMeteoros(personagem,listaMeteoros,vidas)
+
         for x in range(vidas):
             listaVidas[x].draw()
 
         janela.draw_text("Vidas", 35, 5, 30, (126, 25, 27), "Calibri", True)
 
-        janela.draw_text("Energia: %d"%(energia), 1100, 10, 30, (126, 25, 27), "Calibri", True)
+        janela.draw_text("Energia: %d"%(energia), 1000, 10, 30, (126, 25, 27), "Calibri", True)
 
         estagioTutorial = desenharTutorial(estagioTutorial,janela,teclado,mapa) if estagioTutorial > 0 else 0
 
