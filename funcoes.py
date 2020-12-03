@@ -10,11 +10,27 @@ def gerarInimigos(inimigosNoMapa,mapa):
     totem = Sprite("images/inimigos/Totem.png")
     esqueleto = Sprite("images/inimigos/esqueleto_direita.png")
     esqueleto2 = Sprite("images/inimigos/esqueleto_esquerda.png")
+    minotauro = Sprite("images/inimigos/minotauro_direita.png")
+    minotauro2 = Sprite("images/inimigos/minotauro_esquerda.png")
 
     if(mapa == 1):
         return
     elif(mapa == 2):
-        return
+        esqueleto.x = 1000
+        esqueleto.y = 520
+        esqueleto.life = 3
+        esqueleto.tipo = 'esqueleto'
+        esqueleto.estado = 'normal'
+        esqueleto.direcao = 'right'
+        inimigosNoMapa.append(esqueleto)
+
+        esqueleto2.x = 800
+        esqueleto2.y = 520
+        esqueleto2.life = 3
+        esqueleto2.tipo = 'esqueleto'
+        esqueleto2.estado = 'normal'
+        esqueleto2.direcao = 'left'
+        inimigosNoMapa.append(esqueleto2)
     elif(mapa == 3):
         esqueleto.x = 1000
         esqueleto.y = 450
@@ -32,16 +48,47 @@ def gerarInimigos(inimigosNoMapa,mapa):
         esqueleto2.direcao = 'left'
         inimigosNoMapa.append(esqueleto2)
 
+        minotauro.x = 500
+        minotauro.y = 450
+        minotauro.life = 5
+        minotauro.tipo = 'minotauro'
+        minotauro.estado = 'normal'
+        minotauro.direcao = 'right'
+        inimigosNoMapa.append(minotauro)
+        return
     elif(mapa == 4):
         totem.x = 1150
         totem.y = 10
-        totem.life = 4
+        totem.life = 3
         totem.tipo = 'totem'
         totem.estado = 'normal'
         totem.direcao = 'right'
         inimigosNoMapa.append(totem)
+
+        minotauro.x = 500
+        minotauro.y = 650
+        minotauro.life = 5
+        minotauro.tipo = 'minotauro'
+        minotauro.estado = 'normal'
+        minotauro.direcao = 'right'
+        inimigosNoMapa.append(minotauro)
+
+        minotauro2.x = 100
+        minotauro2.y = 650
+        minotauro2.life = 5
+        minotauro2.tipo = 'minotauro'
+        minotauro2.estado = 'normal'
+        minotauro2.direcao = 'left'
+        inimigosNoMapa.append(minotauro2)
+
     elif(mapa == 5):
-        return
+        totem.x = -100
+        totem.y = -100
+        totem.life = 1
+        totem.tipo = 'totem'
+        totem.estado = 'normal'
+        totem.direcao = 'right'
+        inimigosNoMapa.append(totem)
 
     return None
 
@@ -298,9 +345,9 @@ def desenharTiros(tiros, janela):
     for tiro in tiros:
 
         if (tiro.direction == 'right'):
-            tiro.x += 15            
+            tiro.x += 20            
         else:
-            tiro.x -= 15            
+            tiro.x -= 20            
 
         if (tiro.x > janela.width):
             tiros.remove(tiro)
@@ -313,6 +360,7 @@ def desenharTiros(tiros, janela):
 def desenharDanificado(inimigo):
     totemDanificado = Sprite("images/inimigos/totem_dano.png")
     esqueletoDanificado = Sprite("images/inimigos/esqueleto_dano.png")
+    minotauroDanificado = Sprite("images/inimigos/minotauro_dano.png")
     if(inimigo.tipo == 'totem'):
         totemDanificado.x = inimigo.x
         totemDanificado.y = inimigo.y
@@ -321,6 +369,10 @@ def desenharDanificado(inimigo):
         esqueletoDanificado.x = inimigo.x
         esqueletoDanificado.y = inimigo.y
         esqueletoDanificado.draw()
+    if(inimigo.tipo == 'minotauro'):
+        minotauroDanificado.x = inimigo.x
+        minotauroDanificado.y = inimigo.y
+        minotauroDanificado.draw()
 
 def desenharInimigos(inimigosNoMapa,tiros):
     colidiu = False
@@ -345,13 +397,13 @@ def desenharInimigos(inimigosNoMapa,tiros):
             elif(inimigo.tipo == 'esqueleto'):
                 if inimigo.direcao == 'right':
                     temp = Sprite("images/inimigos/esqueleto_direita.png")
-                    inimigo.x += 10
+                    inimigo.x += 7
                     temp.x = inimigo.x
                     temp.y = inimigo.y
                     temp.draw()
                 elif inimigo.direcao == 'left':
                     temp = Sprite("images/inimigos/esqueleto_esquerda.png")
-                    inimigo.x -= 10
+                    inimigo.x -= 7
                     temp.x = inimigo.x
                     temp.y = inimigo.y
                     temp.draw()
@@ -359,6 +411,24 @@ def desenharInimigos(inimigosNoMapa,tiros):
                 if inimigo.x > 1300:
                     inimigo.direcao = 'left'
                 elif inimigo.x < 10:
+                    inimigo.direcao = 'right'
+            elif(inimigo.tipo == 'minotauro'):
+               if inimigo.direcao == 'right':
+                    temp = Sprite("images/inimigos/minotauro_direita.png")
+                    inimigo.x += 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+               elif inimigo.direcao == 'left':
+                    temp = Sprite("images/inimigos/minotauro_esquerda.png")
+                    inimigo.x -= 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+
+               if inimigo.x > 1300:
+                    inimigo.direcao = 'left'
+               elif inimigo.x < 10:
                     inimigo.direcao = 'right'
 
 
@@ -368,12 +438,12 @@ def efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem):
     meteoro.y = 0
     for inimigo in inimigosNoMapa:
         if inimigo.tipo == 'totem':
-            if ultimoMeteoro > 100:
+            if ultimoMeteoro > 150:
                 listaMeteoros.append(meteoro)
                 return 0
     return ultimoMeteoro + 1
 
-def desenharMeteoros(personagem,listaMeteoros,vidas):
+def desenharMeteorosEinimigos(personagem,listaMeteoros,vidas,inimigosNoMapa):
     for meteoro in listaMeteoros:
         meteoro.y += 10
         if(meteoro.collided(personagem)):
@@ -381,4 +451,8 @@ def desenharMeteoros(personagem,listaMeteoros,vidas):
            listaMeteoros.remove(meteoro)
         else:
             meteoro.draw()
+    for inimigo in inimigosNoMapa:
+        if personagem.collided(inimigo):
+            vidas -= 1
+            personagem.y = 0
     return vidas

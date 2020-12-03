@@ -13,7 +13,7 @@ def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
 
     #carrega o mapa inicial
-    mapa = 2
+    mapa = 4
 
     #inimigos no mapa
     inimigosNoMapa = []
@@ -110,7 +110,7 @@ def iniciarNovoJogo(dificuldade, janela):
 
         ultimoMeteoro = efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem)
 
-        vidas = desenharMeteoros(personagem,listaMeteoros,vidas)
+        vidas = desenharMeteorosEinimigos(personagem,listaMeteoros,vidas,inimigosNoMapa)
 
         for x in range(vidas):
             listaVidas[x].draw()

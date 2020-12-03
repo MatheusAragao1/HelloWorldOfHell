@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\images",
+    "\\images\\inimigos",
     "\\images\\mapa_1",
     "\\images\\personagem"
   ],
+  "SelectedNode": "\\images\\inimigos",
   "PreviewInSolutionExplorer": false
 }
