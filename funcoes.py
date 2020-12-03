@@ -50,7 +50,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
 
         minotauro.x = 500
         minotauro.y = 450
-        minotauro.life = 5
+        minotauro.life = 4
         minotauro.tipo = 'minotauro'
         minotauro.estado = 'normal'
         minotauro.direcao = 'right'
@@ -59,7 +59,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
     elif(mapa == 4):
         totem.x = 1150
         totem.y = 10
-        totem.life = 3
+        totem.life = 2
         totem.tipo = 'totem'
         totem.estado = 'normal'
         totem.direcao = 'right'
@@ -67,7 +67,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
 
         minotauro.x = 500
         minotauro.y = 650
-        minotauro.life = 5
+        minotauro.life = 4
         minotauro.tipo = 'minotauro'
         minotauro.estado = 'normal'
         minotauro.direcao = 'right'
@@ -75,7 +75,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
 
         minotauro2.x = 100
         minotauro2.y = 650
-        minotauro2.life = 5
+        minotauro2.life = 4
         minotauro2.tipo = 'minotauro'
         minotauro2.estado = 'normal'
         minotauro2.direcao = 'left'

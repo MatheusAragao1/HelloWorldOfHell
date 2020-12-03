@@ -13,7 +13,7 @@ def iniciarNovoJogo(dificuldade, janela):
     vidas = 3
 
     #carrega o mapa inicial
-    mapa = 4
+    mapa = 1
 
     #inimigos no mapa
     inimigosNoMapa = []
