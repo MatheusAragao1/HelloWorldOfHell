@@ -93,7 +93,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
 
         mago.x = 1000
         mago.y = 100
-        mago.life = 6
+        mago.life = 10
         mago.tipo = 'mago'
         mago.estado = 'normal'
         mago.direcao = 'left'
@@ -423,7 +423,7 @@ def desenharInimigos(inimigosNoMapa,tiros,janela):
                     inimigo.estado = 'danificado'
                     inimigo.life -= 1
                     desenharDanificado(inimigo)
-                    if(inimigo.tipo == 'mago'):
+                    if(inimigo.tipo == 'mago' and len(inimigosNoMapa) < 8):
                         invocarInimigos(inimigosNoMapa)
                     if(inimigo.life == 0 and inimigo.tipo == 'mago'):
                         return True
