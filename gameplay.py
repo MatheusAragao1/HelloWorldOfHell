@@ -10,7 +10,12 @@ def iniciarNovoJogo(dificuldade, janela):
     #ensina o jogador os primeiros comandos do jogo
     estagioTutorial = 4
 
-    vidas = 3
+    if dificuldade == 3:
+        vidas = 1
+    elif dificuldade == 2:
+        vidas = 2
+    else:
+        vidas = 3
 
     #carrega o mapa inicial
     mapa = 1
@@ -106,11 +111,14 @@ def iniciarNovoJogo(dificuldade, janela):
 
         desenharTiros(tiros, janela)
 
-        desenharInimigos(inimigosNoMapa,tiros)
+        fimDeJogo = desenharInimigos(inimigosNoMapa,tiros,janela)
 
         ultimoMeteoro = efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem)
 
         vidas = desenharMeteorosEinimigos(personagem,listaMeteoros,vidas,inimigosNoMapa)
+
+        if fimDeJogo:
+            return True
 
         for x in range(vidas):
             listaVidas[x].draw()

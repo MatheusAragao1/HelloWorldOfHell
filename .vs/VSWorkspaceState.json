@@ -1,11 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\images",
-    "\\images\\inimigos",
-    "\\images\\mapa_1",
-    "\\images\\personagem"
+    "\\images\\personagem",
+    "\\PPlay"
   ],
-  "SelectedNode": "\\images\\inimigos",
+  "SelectedNode": "\\PPlay\\animation.py",
   "PreviewInSolutionExplorer": false
 }

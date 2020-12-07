@@ -12,6 +12,7 @@ def gerarInimigos(inimigosNoMapa,mapa):
     esqueleto2 = Sprite("images/inimigos/esqueleto_esquerda.png")
     minotauro = Sprite("images/inimigos/minotauro_direita.png")
     minotauro2 = Sprite("images/inimigos/minotauro_esquerda.png")
+    mago = Sprite("images/inimigos/boss_direita.png")
 
     if(mapa == 1):
         return
@@ -89,6 +90,15 @@ def gerarInimigos(inimigosNoMapa,mapa):
         totem.estado = 'normal'
         totem.direcao = 'right'
         inimigosNoMapa.append(totem)
+
+        mago.x = 1000
+        mago.y = 100
+        mago.life = 6
+        mago.tipo = 'mago'
+        mago.estado = 'normal'
+        mago.direcao = 'left'
+        inimigosNoMapa.append(mago)       
+
 
     return None
 
@@ -316,7 +326,14 @@ def configurarVidas(dificuldade):
     vida3.x = 90
     vida3.y = 30
 
-    return [vida1, vida2, vida3]
+    if dificuldade == 3:
+        return [vida1]
+
+    elif dificuldade == 2:
+        return [vida1, vida2]
+
+    else:
+        return [vida1, vida2, vida3]
 
 
 def cronometroECriacaoTiros(cronometroTiro, tiros, personagem, teclado, ultimaDirecao):
@@ -374,17 +391,44 @@ def desenharDanificado(inimigo):
         minotauroDanificado.y = inimigo.y
         minotauroDanificado.draw()
 
-def desenharInimigos(inimigosNoMapa,tiros):
+def invocarInimigos(inimigosNoMapa):
+    esqueleto = Sprite("images/inimigos/esqueleto_direita.png")
+    minotauro = Sprite("images/inimigos/minotauro_direita.png")
+
+    esqueleto.x = 1000
+    esqueleto.y = 720
+    esqueleto.life = 3
+    esqueleto.tipo = 'esqueleto'
+    esqueleto.estado = 'normal'
+    esqueleto.direcao = 'right'
+    inimigosNoMapa.append(esqueleto)
+
+    minotauro.x = 1000
+    minotauro.y = 720
+    minotauro.life = 4
+    minotauro.tipo = 'minotauro'
+    minotauro.estado = 'normal'
+    minotauro.direcao = 'left'
+    inimigosNoMapa.append(minotauro)
+
+
+    return None
+
+def desenharInimigos(inimigosNoMapa,tiros,janela):
     colidiu = False
     for tiro in tiros:
         for inimigo in inimigosNoMapa:
             if tiro.collided(inimigo):
-                colidiu = True
-                inimigo.estado = 'danificado'
-                inimigo.life -= 1
-                desenharDanificado(inimigo)
-                if(inimigo.life == 0):
-                    inimigosNoMapa.remove(inimigo)
+                    colidiu = True
+                    inimigo.estado = 'danificado'
+                    inimigo.life -= 1
+                    desenharDanificado(inimigo)
+                    if(inimigo.tipo == 'mago'):
+                        invocarInimigos(inimigosNoMapa)
+                    if(inimigo.life == 0 and inimigo.tipo == 'mago'):
+                        return True
+                    if(inimigo.life == 0):
+                        inimigosNoMapa.remove(inimigo)
         if colidiu == True:
             tiros.remove(tiro)
             colidiu = False
@@ -430,6 +474,33 @@ def desenharInimigos(inimigosNoMapa,tiros):
                     inimigo.direcao = 'left'
                elif inimigo.x < 10:
                     inimigo.direcao = 'right'
+            elif(inimigo.tipo == 'mago'):
+               janela.draw_text("Vidas do Mago: %d"%(inimigo.life), 500,80, 35, (255,211,0), "Roboto", True)
+               if inimigo.direcao == 'right':
+                    temp = Sprite("images/inimigos/boss_direita.png")
+                    inimigo.x += 10
+                    inimigo.y += 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+               elif inimigo.direcao == 'left':
+                    temp = Sprite("images/inimigos/boss_esquerda.png")
+                    inimigo.x -= 10
+                    inimigo.y += 10
+                    temp.x = inimigo.x
+                    temp.y = inimigo.y
+                    temp.draw()
+
+               if inimigo.x > 1300:
+                    inimigo.direcao = 'left'
+               elif inimigo.x < 10:
+                    inimigo.direcao = 'right'
+               
+
+               if inimigo.y > 950:
+                   inimigo.y = -100
+                               
+              
 
 
 def efeitoTotem(inimigosNoMapa,ultimoMeteoro,listaMeteoros,personagem):

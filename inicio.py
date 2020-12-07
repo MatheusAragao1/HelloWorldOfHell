@@ -2,6 +2,7 @@ from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
 from gameplay import *
+from conf import *
 
 janela = Window(1351, 901)
 mouse1 = Window.get_mouse()
@@ -43,7 +44,7 @@ botaoSairHover.y = botaoConfHover.y + 150
 #configuracaoJogo
 
 dificuldade = 1
-
+ganhou = False
 
 while(True):                               
 
@@ -52,7 +53,7 @@ while(True):
  if mouse1.is_over_area((botaoNewGame.x, botaoNewGame.y), (botaoNewGame.x + 450, botaoNewGame.y + 100)):
     botaoNewGameHover.draw()
     if mouse1.is_button_pressed(1):
-        iniciarNovoJogo(dificuldade,janela);
+        ganhou = iniciarNovoJogo(dificuldade,janela);
  else:
     botaoNewGame.draw()
 
@@ -63,13 +64,19 @@ while(True):
 
  if mouse1.is_over_area((botaoConf.x, botaoConf.y), (botaoConf.x + 450, botaoConf.y + 100)):
     botaoConfHover.draw()
+    if mouse1.is_button_pressed(1):
+        dificuldade = configurar(dificuldade,janela,background,mouse1)
  else:
     botaoConf.draw()
 
  if mouse1.is_over_area((botaoSair.x, botaoSair.y), (botaoSair.x + 450, botaoSair.y + 100)):
     botaoSairHover.draw()
+    if mouse1.is_button_pressed(1):
+        break
  else:
     botaoSair.draw()
 
  janela.draw_text("Hello World of hell", 300,30, 104, (255,211,0), "Roboto", True)
+ if ganhou:
+     janela.draw_text("Parabéns por finalizar o jogo", 300,100, 70, (255,211,0), "Roboto", True)
  janela.update()
