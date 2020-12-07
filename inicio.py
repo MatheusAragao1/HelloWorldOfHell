@@ -22,23 +22,23 @@ botaoSairHover = Sprite ("images/menu/botaoSairHover.png")
 
 #configuracaoBotoes
 botaoNewGame.x = (janela.width - botaoNewGame.width)/2
-botaoRanking.x = (janela.width - botaoNewGame.width)/2
+#botaoRanking.x = (janela.width - botaoNewGame.width)/2
 botaoConf.x = (janela.width - botaoNewGame.width)/2
 botaoSair.x = (janela.width - botaoNewGame.width)/2
 
 botaoNewGame.y = ((janela.height - botaoNewGame.height)/2) - 200
-botaoRanking.y = botaoNewGame.y + 150
-botaoConf.y = botaoRanking.y + 150
+#botaoRanking.y = botaoNewGame.y + 150
+botaoConf.y = botaoNewGame.y + 150
 botaoSair.y = botaoConf.y + 150
 
 botaoNewGameHover.x = (janela.width - botaoNewGameHover.width)/2
-botaoRankingHover.x = (janela.width - botaoNewGameHover.width)/2
+#botaoRankingHover.x = (janela.width - botaoNewGameHover.width)/2
 botaoConfHover.x = (janela.width - botaoNewGameHover.width)/2
 botaoSairHover.x = (janela.width - botaoNewGameHover.width)/2
 
 botaoNewGameHover.y = ((janela.height - botaoNewGameHover.height)/2) - 200
-botaoRankingHover.y = botaoNewGameHover.y + 150
-botaoConfHover.y = botaoRankingHover.y + 150
+#botaoRankingHover.y = botaoNewGameHover.y + 150
+botaoConfHover.y = botaoNewGameHover.y + 150
 botaoSairHover.y = botaoConfHover.y + 150
 
 #configuracaoJogo
@@ -57,10 +57,10 @@ while(True):
  else:
     botaoNewGame.draw()
 
- if mouse1.is_over_area((botaoRanking.x, botaoRanking.y), (botaoRanking.x + 450, botaoRanking.y + 100)):
-    botaoRankingHover.draw()
- else:
-    botaoRanking.draw()
+ #if mouse1.is_over_area((botaoRanking.x, botaoRanking.y), (botaoRanking.x + 450, botaoRanking.y + 100)):
+ #   botaoRankingHover.draw()
+ #else:
+ #   botaoRanking.draw()
 
  if mouse1.is_over_area((botaoConf.x, botaoConf.y), (botaoConf.x + 450, botaoConf.y + 100)):
     botaoConfHover.draw()
