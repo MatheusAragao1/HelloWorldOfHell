@@ -72,7 +72,7 @@ while(True):
  if mouse1.is_over_area((botaoSair.x, botaoSair.y), (botaoSair.x + 450, botaoSair.y + 100)):
     botaoSairHover.draw()
     if mouse1.is_button_pressed(1):
-        break
+        janela.close()
  else:
     botaoSair.draw()
 
